@@ -2,7 +2,8 @@ from django.db import models
 
 
 class Title(models.Model):
-    name = models.CharField(max_length=256,
+    name = models.CharField(
+        max_length=256,
         verbose_name='Название')
     year = models.IntegerField(
         verbose_name='Год выпуска')
@@ -13,12 +14,12 @@ class Title(models.Model):
     genre = models.ManyToManyField(
         'Genre',
         blank=True,
-        null=True,
         related_name='titles',
         verbose_name='Жанр')
-    category = models.OneToOneField(
+    category = models.ForeignKey(
         'Category',
-        on_delete=models.SET_NULL,
+        blank=True,
+        on_delete=models.DO_NOTHING,
         related_name='titles',
         verbose_name='Категория',
         primary_key=True)
