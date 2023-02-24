@@ -1,9 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from users.models import User
-
-
-LEN_OUTPUT = 100
+from django.conf import settings
 
 
 class Title(models.Model):
@@ -91,7 +89,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return self.text[:LEN_OUTPUT]
+        return self.text[:settings.LEN_OUTPUT]
 
 
 class Comment(models.Model):
@@ -114,4 +112,4 @@ class Comment(models.Model):
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return self.text[:LEN_OUTPUT]
+        return self.text[:settings.LEN_OUTPUT]
