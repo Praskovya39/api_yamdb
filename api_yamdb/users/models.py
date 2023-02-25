@@ -37,4 +37,13 @@ class User(AbstractUser):
     def is_user(self):
         """Проверка пользователя на юзера."""
         return self.role == 'user'
-    
+
+    #class Meta:
+    #    """Сортировка и проверка на уникальность """
+    #
+    #  constraints = [
+    #        models.UniqueConstraint(
+    #            fields=['username', 'email'],
+    #            name='unique_username_email'
+    #        )
+    #    ]
