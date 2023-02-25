@@ -8,7 +8,7 @@ from api.serializers import (TitleSerializer, TitleReadSerializer,
                              CategorySerializer, GenreSerializer,
                              CommentSerializer, ReviewSerializer)
 
-from .permissions import IsAuthorOrModer
+from api.permissions import IsAuthorOrModer
 
 
 class TitleViewSet(viewsets.ModelViewSet):
