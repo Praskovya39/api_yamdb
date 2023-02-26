@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from users.models import User
 
+
 class TokenSerializer(serializers.Serializer):
     username = serializers.CharField()
     confirmation_code = serializers.CharField()
@@ -14,7 +15,7 @@ class SignUpSerializers(serializers.Serializer):
     username = serializers.CharField(required=True)
 
     class Meta:
-        fields = ("email", "username")
+        fields = ('email', 'username')
 
 
 class UserSerializer(serializers.ModelSerializer):

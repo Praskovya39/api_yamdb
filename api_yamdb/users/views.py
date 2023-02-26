@@ -3,11 +3,11 @@ from rest_framework.decorators import api_view, action
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from users.models import User
 from rest_framework import viewsets, pagination, permissions, filters
 
-from .serializers import TokenSerializer, SignUpSerializers, UserSerializer
-from .permissions import IsAdmin
+from users.models import User
+from users.serializers import TokenSerializer, SignUpSerializers, UserSerializer
+from users.permissions import IsAdmin
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -21,40 +21,42 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=False,
-        methods=["GET", "PATCH"],
-        url_path="me",
+        methods=['GET', 'PATCH'],
+        url_path='me',
         permission_classes=[permissions.IsAuthenticated]
     )
     def get_self(self, request):
-        if request.method == "GET":
+        if request.method == 'GET':
             serializer = UserSerializer(request.user)
             return Response(
                 serializer.data,
                 status=200
             )
-        serializer = UserSerializer(instance=request.user, data=request.data, partial=True)
+        serializer = UserSerializer(instance=request.user,
+                                    data=request.data,
+                                    partial=True)
         serializer.save(partial=True)
         return Response(serializer.data, status=200)
 
 
-
-@api_view(["POST"])
+@api_view(['POST'])
 def token(request):
     serializer = TokenSerializer(data=request.data)
     if serializer.is_valid():
-        user = get_object_or_404(User, username=serializer.validated_data['username'])
+        user = get_object_or_404(
+            User, username=serializer.validated_data['username'])
         confirmation_code = serializer.validated_data['confirmation_code']
         if default_token_generator.check_token(user, confirmation_code):
             token = AccessToken.for_user(user)
             data = {
-                "username": serializer.validated_data['username'],
+                'username': serializer.validated_data['username'],
                 'token': str(token)
             }
             return Response(data, status=200)
     return Response(serializer.errors, status=400)
 
 
-@api_view(["POST"])
+@api_view(['POST'])
 def signup(request):
     serializer = SignUpSerializers(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -64,7 +66,7 @@ def signup(request):
     )
     confirmation_code = default_token_generator.make_token(user)
     user.email_user(
-        subject="Ваш код",
+        subject='Ваш код',
         message=f'Код подтверждения - {confirmation_code}',
         from_email='egor@yamdb.com'
     )

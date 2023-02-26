@@ -19,7 +19,7 @@ class User(AbstractUser):
     bio = models.TextField(max_length=500, null=True)
     role = models.CharField(max_length=15,choices=CHOISES, default='user')
 
-    REQUIRED_FIELDS = ["email"]
+    REQUIRED_FIELDS = ['email']
 
     def __str__(self):
         return self.username
@@ -41,6 +41,6 @@ class User(AbstractUser):
 
     class Meta:
         constraints = (
-            models.UniqueConstraint(fields=("email", "username"),
-                                    name="unique_user"),
+            models.UniqueConstraint(fields=('email', 'username'),
+                                    name='unique_user'),
         )

@@ -6,12 +6,12 @@ router = DefaultRouter()
 router.register('users', UserViewSet)
 
 authurls = [
-    path("token/", token, name="token_obtain"),
-    path("signup/", signup, name="signup"),
+    path('token/', token, name='token_obtain'),
+    path('signup/', signup, name='signup'),
 ]
 
 
 urlpatterns = [
-    path("v1/", include(router.urls)),
-    path("v1/auth/", include(authurls))
+    path('v1/', include(router.urls)),
+    path('v1/auth/', include(authurls))
 ]
