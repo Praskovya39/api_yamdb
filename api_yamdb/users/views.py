@@ -1,3 +1,4 @@
+
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, action
 from django.contrib.auth.tokens import default_token_generator
@@ -71,3 +72,6 @@ def signup(request):
         from_email='egor@yamdb.com'
     )
     return Response(serializer.data, status=200)
+
+from django.shortcuts import render
+
