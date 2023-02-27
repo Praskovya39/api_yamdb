@@ -8,12 +8,12 @@ coreschema==0.0.4
 cryptography==39.0.1
 defusedxml==0.7.1
 Django==3.2
+django-filter==22.1
 django-templated-mail==1.1.1
 djangorestframework==3.12.4
 djangorestframework-simplejwt==4.8.0
 djoser==2.1.0
 idna==3.4
-importlib-metadata==1.7.0
 iniconfig==2.0.0
 itypes==1.2.0
 Jinja2==3.1.2
@@ -38,7 +38,5 @@ social-auth-core==4.3.0
 sqlparse==0.4.3
 toml==0.10.2
 typing==3.7.4.3
-typing_extensions==4.5.0
 uritemplate==4.1.1
 urllib3==1.26.14
-zipp==3.15.0
