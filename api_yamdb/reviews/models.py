@@ -21,7 +21,7 @@ class Title(models.Model):
     category = models.ForeignKey(
         'Category',
         blank=True,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.PROTECT,
         related_name='titles',
         verbose_name='Категория')
 
