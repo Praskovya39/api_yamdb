@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework import viewsets, pagination, permissions, filters
 
 from users.models import User
-from users.serializers import TokenSerializer, SignUpSerializers, UserSerializer
+from users.serializers import TokenSerializer, SignUpSerializers, UserSerializer, UserNotAdminSerializer
 from users.permissions import IsAdmin
 
 
@@ -16,6 +16,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAdmin, ]
     pagination_class = pagination.LimitOffsetPagination
+    http_method_names = ('get', 'post', 'patch', 'delete')
     lookup_field = 'username'
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username', )
@@ -27,21 +28,16 @@ class UserViewSet(viewsets.ModelViewSet):
         permission_classes=[permissions.IsAuthenticated]
     )
     def get_self(self, request):
-        if request.method == 'GET':
-            serializer = UserSerializer(request.user)
-            if not serializer.is_valid():
-                return Response(serializer.errors, status=400)
-            return Response(
-                serializer.data,
-                status=200
-            )
-        serializer = UserSerializer(instance=request.user,
-                                    data=request.data,
-                                    partial=True)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=400)
-        serializer.save(partial=True)
-        return Response(serializer.data, status=200)
+        serializer = UserSerializer(request.user)
+        if request.method == 'PATCH':
+            if request.user.is_admin:
+                serializer = UserSerializer(request.user, data=request.data,partial=True)
+            else:
+                serializer = UserNotAdminSerializer(request.user, data=request.data,partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.data)
 
 
 @api_view(['POST'])
