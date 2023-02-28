@@ -7,7 +7,8 @@ from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework import viewsets, pagination, permissions, filters
 
 from users.models import User
-from users.serializers import TokenSerializer, SignUpSerializers, UserSerializer, UserNotAdminSerializer
+from users.serializers import (
+    TokenSerializer, SignUpSerializers, UserSerializer, UserNotAdminSerializer)
 from users.permissions import IsAdmin
 
 
@@ -31,9 +32,11 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserSerializer(request.user)
         if request.method == 'PATCH':
             if request.user.is_admin:
-                serializer = UserSerializer(request.user, data=request.data,partial=True)
+                serializer = UserSerializer(
+                    request.user, data=request.data, partial=True)
             else:
-                serializer = UserNotAdminSerializer(request.user, data=request.data,partial=True)
+                serializer = UserNotAdminSerializer(
+                    request.user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=200)
@@ -72,5 +75,3 @@ def signup(request):
         from_email='egor@yamdb.com'
     )
     return Response(serializer.data, status=200)
-
-

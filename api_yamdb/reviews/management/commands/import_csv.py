@@ -53,8 +53,11 @@ class Command(BaseCommand):
         with open(CSV_DIR / 'titles.csv', encoding='utf8') as csvfile:
             dict_reader = DictReader(csvfile)
             for row in dict_reader:
-                for i in row:
-                    Title.objects.create(i=row['i'])
+                Title.objects.create(
+                    id=row['id'],
+                    name=row['name'],
+                    year=row['year'],
+                    category_id=row['category'])
             print('Данные модели Title успешно загружены')
 
     def import_genre_title(self):

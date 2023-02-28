@@ -5,7 +5,8 @@ from django.conf import settings
 
 
 class Title(models.Model):
-    name = models.CharField(max_length=256,
+    name = models.CharField(
+        max_length=256,
         verbose_name='Название')
     year = models.IntegerField(
         verbose_name='Год выпуска')

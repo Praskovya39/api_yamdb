@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -31,7 +31,7 @@ class CategoryViewSet(CustomViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = LimitOffsetPagination
     filter_backends = (filters.SearchFilter,)
-    search_fields = ['=name']
+    search_fields = ('name',)
     lookup_field = 'slug'
     serializer_class = CategorySerializer
 
@@ -44,6 +44,7 @@ class GenreViewSet(CustomViewSet):
     search_fields = ['=name']
     lookup_field = 'slug'
     serializer_class = GenreSerializer
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
