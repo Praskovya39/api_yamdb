@@ -29,6 +29,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_self(self, request):
         if request.method == 'GET':
             serializer = UserSerializer(request.user)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=400)
             return Response(
                 serializer.data,
                 status=200
@@ -36,6 +38,8 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserSerializer(instance=request.user,
                                     data=request.data,
                                     partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
         serializer.save(partial=True)
         return Response(serializer.data, status=200)
 
@@ -73,5 +77,4 @@ def signup(request):
     )
     return Response(serializer.data, status=200)
 
-from django.shortcuts import render
 
