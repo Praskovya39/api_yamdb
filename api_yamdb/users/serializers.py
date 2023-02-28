@@ -14,6 +14,18 @@ class SignUpSerializers(serializers.Serializer):
     email = serializers.EmailField(required=True)
     username = serializers.CharField(required=True)
 
+    def validate_email(self,value):
+        if len(value) > 254:
+            raise serializers.ValidationError('Количество символов поля email не должно превышать 254')
+        return value
+
+    def validate_username(self,value):
+        if len(value) > 150:
+            raise serializers.ValidationError('Количество символов поля username не должно превышать 150')
+        if value == 'me':
+            raise serializers.ValidationError('Значение поля username не может быть me')
+        return value
+
     class Meta:
         fields = ('email', 'username')
 

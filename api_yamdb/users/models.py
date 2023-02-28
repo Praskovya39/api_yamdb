@@ -13,7 +13,7 @@ CHOISES = (
 
 
 class User(AbstractUser):
-    email = models.EmailField(max_length=50,unique=True, blank=False)
+    email = models.EmailField(max_length=254,unique=True, blank=False)
     first_name = models.CharField(max_length=20, blank=True)
     last_name = models.CharField(max_length=40, blank=True)
     bio = models.TextField(max_length=500, null=True)
