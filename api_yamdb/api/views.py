@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
+from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from reviews.models import Title, Category, Genre, Review
@@ -14,14 +15,14 @@ from api.filter import CustomFilter
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.annotate(rating=Avg('reviews__score')).all()
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CustomFilter
 
     def get_serializer_class(self):
-        if self.action == 'list' or self.action == 'retrive':
+        if self.action in ('list', 'retrieve'):
             return TitleReadSerializer
         return TitleSerializer
 
