@@ -61,15 +61,13 @@ class Command(BaseCommand):
             print('Данные модели Title успешно загружены')
 
     def import_genre_title(self):
-        if Title.genre.through.objects.exists():
-            print('Модель Genre_title уже содержит данные, отменена загрузки')
         with open(CSV_DIR / 'genre_title.csv', encoding='utf8') as csvfile:
             dict_reader = DictReader(csvfile)
             for row in dict_reader:
-                Title.genre.through.create(
-                    id=row['id'],
-                    title_id=row['title_id'],
-                    genre_id=row['genre_id'],)
+                id = row['id'],
+                title = Title.objects.get(pk=row['title_id'])
+                genre = Genre.objects.get(pk=row['genre_id'])
+                title.genre.add(genre)
             print('Данные модели Genre_title успешно загружены')
 
     def import_review(self):
@@ -107,6 +105,6 @@ class Command(BaseCommand):
         self.import_genre()
         self.import_user()
         self.import_title()
-        self.import_genre_title()
         self.import_review()
         self.import_comment()
+        self.import_genre_title()
