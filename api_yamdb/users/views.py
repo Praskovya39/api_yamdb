@@ -43,7 +43,6 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save(role=instance.role, partial=True)
         return Response(serializer.data)
 
-
 @api_view(['POST'])
 def token(request):
     serializer = TokenSerializer(data=request.data)

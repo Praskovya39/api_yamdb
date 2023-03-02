@@ -1,6 +1,7 @@
 import re
 from rest_framework import serializers
 from users.models import User
+from api_yamdb.settings import LEN_EMAIL, LEN_USERNAME, USERNAME_PATTERN
 
 
 LEN_EMAIL = 254  # максимальная допустима длина email

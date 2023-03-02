@@ -64,7 +64,6 @@ class Command(BaseCommand):
         with open(CSV_DIR / 'genre_title.csv', encoding='utf8') as csvfile:
             dict_reader = DictReader(csvfile)
             for row in dict_reader:
-                id = row['id'],
                 title = Title.objects.get(pk=row['title_id'])
                 genre = Genre.objects.get(pk=row['genre_id'])
                 title.genre.add(genre)
