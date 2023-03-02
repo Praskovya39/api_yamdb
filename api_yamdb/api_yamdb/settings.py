@@ -122,6 +122,8 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
 CSV_DIR = BASE_DIR / 'static/data/'
 
+EMAIL_YAMDB = 'egor@yamdb.com'
+
 MIN = 1
 
 MAX = 10
