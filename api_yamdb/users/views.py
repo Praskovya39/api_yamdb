@@ -1,10 +1,11 @@
-
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, action
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework import viewsets, pagination, permissions, filters
+from rest_framework import viewsets, pagination, permissions, filters, status
+
 
 from users.models import User
 from users.serializers import (
@@ -24,7 +25,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=False,
-        methods=['GET', 'PATCH'],
+        methods=('GET', 'PATCH'),
         url_path='me',
         permission_classes=[permissions.IsAuthenticated]
     )
@@ -45,7 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
 @api_view(['POST'])
 def token(request):
     serializer = TokenSerializer(data=request.data)
-    if serializer.is_valid():
+    if serializer.is_valid(raise_exception=True):
         user = get_object_or_404(
             User, username=serializer.validated_data['username'])
         confirmation_code = serializer.validated_data['confirmation_code']
@@ -55,8 +56,8 @@ def token(request):
                 'username': serializer.validated_data['username'],
                 'token': str(token)
             }
-            return Response(data, status=200)
-    return Response(serializer.errors, status=400)
+            return Response(data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -71,6 +72,6 @@ def signup(request):
     user.email_user(
         subject='Ваш код',
         message=f'Код подтверждения - {confirmation_code}',
-        from_email='egor@yamdb.com'
+        from_email=settings.EMAIL_YAMDB
     )
-    return Response(serializer.data, status=200)
+    return Response(serializer.data, status=status.HTTP_200_OK)
