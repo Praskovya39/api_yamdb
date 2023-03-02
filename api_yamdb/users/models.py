@@ -6,18 +6,22 @@ STAFF = 'moderator'
 ADMIN = 'admin'
 
 CHOISES = (
-    ('user', 'пользователь'),
-    ('moderator', 'модератор'),
-    ('admin', 'администратор')
+    (USER, 'пользователь'),
+    (STAFF, 'модератор'),
+    (ADMIN, 'администратор')
 )
 
 
 class User(AbstractUser):
-    email = models.EmailField(max_length=254, unique=True, blank=False)
-    first_name = models.CharField(max_length=20, blank=True)
-    last_name = models.CharField(max_length=40, blank=True)
-    bio = models.TextField(max_length=500, null=True)
-    role = models.CharField(max_length=15, choices=CHOISES, default='user')
+    email = models.EmailField(max_length=254, unique=True, blank=False,
+                              verbose_name='Электронная почта', help_text='Введите адрес электронной почты')
+    first_name = models.CharField(max_length=20, blank=True,
+                                  verbose_name='Имя', help_text='Напишите свое имя')
+    last_name = models.CharField(max_length=40, blank=True,
+                                 verbose_name='Фамилия', help_text='Напишите свою фамилию')
+    bio = models.TextField(max_length=500, null=True,
+                           verbose_name='Биография', help_text='Расскажите о себе')
+    role = models.CharField(max_length=15, choices=CHOISES, default='user', verbose_name='Статус пользователя')
 
     REQUIRED_FIELDS = ['email']
 
@@ -27,17 +31,17 @@ class User(AbstractUser):
     @property
     def is_admin(self):
         """Проверка пользователя на администратора."""
-        return self.role == 'admin' or self.is_superuser
+        return self.role == ADMIN or self.is_superuser
 
     @property
     def is_moderator(self):
         """Проверка пользователя на модератора."""
-        return self.role == 'moderator'
+        return self.role == STAFF
 
     @property
     def is_user(self):
         """Проверка пользователя на юзера."""
-        return self.role == 'user'
+        return self.role == USER
 
     class Meta:
         constraints = (

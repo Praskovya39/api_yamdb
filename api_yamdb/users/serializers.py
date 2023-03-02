@@ -3,12 +3,17 @@ from rest_framework import serializers
 from users.models import User
 
 
+LEN_EMAIL = 254  # максимальная допустима длина email
+LEN_USERNAME = 150  # максимальная допустима длина username
+USERNAME_PATTERN = r'^[\w.@+-]+\Z'  # паттерн поля username
+
+
 class TokenSerializer(serializers.Serializer):
     username = serializers.CharField()
     confirmation_code = serializers.CharField()
 
     class Meta:
-        fields = ("username", "confirmation_code")
+        fields = ('username', 'confirmation_code')
 
 
 class SignUpSerializers(serializers.Serializer):
@@ -16,35 +21,35 @@ class SignUpSerializers(serializers.Serializer):
     username = serializers.CharField(required=True)
 
     def validate(self, data):
+        username = data.get('username', None)
+        email = data.get('email', None)
 
-        if not User.objects.filter(
-                username=data.get("username"), email=data.get("email")
-        ).exists():
-            if User.objects.filter(username=data.get("username")):
-                raise serializers.ValidationError(
-                    "Пользователь с таким username уже существует"
-                )
+        if User.objects.filter(email=email, username=username).exists():
+            return data
 
-            if User.objects.filter(email=data.get("email")):
-                raise serializers.ValidationError(
-                    "Пользователь с таким Email уже существует"
-                )
-
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                'Данный email занят.'
+            )
+        if User.objects.filter(username=username).exists():
+            raise serializers.ValidationError(
+                'Данный username занят.'
+            )
         return data
 
     def validate_email(self, value):
-        if len(value) > 254:
+        if len(value) > LEN_EMAIL:
             raise serializers.ValidationError(
-                'Количество символов поля email не должно превышать 254')
+                f'Количество символов поля email не должно превышать {LEN_EMAIL}')
         return value
 
     def validate_username(self, value):
-        if re.fullmatch(r"^[\w.@+-]+\Z", value) is None:
+        if re.fullmatch(USERNAME_PATTERN, value) is None:
             raise serializers.ValidationError(
-                'Полое username не соответсвует паттерну')
-        if len(value) > 150:
+                'Поле username не соответсвует паттерну')
+        if len(value) > LEN_USERNAME:
             raise serializers.ValidationError(
-                'Количество символов поля username не должно превышать 150')
+                f'Количество символов поля username не должно превышать {LEN_USERNAME}')
         if value == 'me':
             raise serializers.ValidationError(
                 'Значение поля username не может быть me')
