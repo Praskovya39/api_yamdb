@@ -29,19 +29,18 @@ class UserViewSet(viewsets.ModelViewSet):
         permission_classes=[permissions.IsAuthenticated]
     )
     def get_self(self, request):
-        serializer = UserSerializer(request.user)
-        if request.method == 'PATCH':
-            if request.user.is_admin:
-                serializer = UserSerializer(
-                    request.user, data=request.data, partial=True)
-            else:
-                serializer = UserNotAdminSerializer(
-                    request.user, data=request.data, partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=200)
+        instance = request.user
+        if request.method != 'PATCH':
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        serializer = self.get_serializer(
+            instance,
+            request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save(role=instance.role, partial=True)
         return Response(serializer.data)
-
 
 @api_view(['POST'])
 def token(request):

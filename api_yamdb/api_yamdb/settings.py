@@ -121,3 +121,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
 CSV_DIR = BASE_DIR / 'static/data/'
+
+MIN = 1
+
+MAX = 10
+
+LEN_EMAIL = 254  # максимальная допустима длина email
+
+LEN_USERNAME = 150  # максимальная допустима длина username
+
+USERNAME_PATTERN = r'^[\w.@+-]+\Z'  # паттерн поля username

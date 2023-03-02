@@ -15,11 +15,15 @@ from api.filter import CustomFilter
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(rating=Avg('reviews__score')).all()
+
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CustomFilter
+
+    def get_queryset(self):
+        queryset = Title.objects.annotate(rating=Avg('reviews__score')).all()
+        return queryset
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
@@ -42,7 +46,7 @@ class GenreViewSet(CustomViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = LimitOffsetPagination
     filter_backends = (filters.SearchFilter,)
-    search_fields = ['=name']
+    search_fields = ('name',)
     lookup_field = 'slug'
     serializer_class = GenreSerializer
 
@@ -61,8 +65,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         review_id = self.kwargs.get('review_id')
         new_review = get_object_or_404(Review, pk=review_id)
-        if serializer.is_valid():
-            serializer.save(author=self.request.user, review=new_review)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=self.request.user, review=new_review)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -77,5 +81,5 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return self.get_title().reviews.all()
 
     def perform_create(self, serializer):
-        if serializer.is_valid():
-            serializer.save(author=self.request.user, title=self.get_title())
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=self.request.user, title=self.get_title())
