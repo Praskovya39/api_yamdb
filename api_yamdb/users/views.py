@@ -9,7 +9,7 @@ from rest_framework import viewsets, pagination, permissions, filters, status
 from api_yamdb.settings import SELF_USERNAME
 from users.models import User
 from users.serializers import (
-    TokenSerializer, SignUpSerializers, UserSerializer, UserNotAdminSerializer)
+    TokenSerializer, SignUpSerializers, UserSerializer)
 from users.permissions import IsAdmin
 
 
@@ -42,6 +42,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save(role=instance.role, partial=True)
         return Response(serializer.data)
+
 
 @api_view(['POST'])
 def token(request):

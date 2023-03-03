@@ -2,7 +2,7 @@ from django.db.models import Avg
 from django.core.validators import MaxValueValidator, MinValueValidator
 from rest_framework import serializers
 from reviews.models import Title, Category, Genre, Comment, Review
-from api_yamdb.settings import MIN, MAX
+from api_yamdb.settings import MIN_SCORE, MAX_SCORE
 from reviews.validator import year_validate
 
 
@@ -31,7 +31,8 @@ class TitleSerializer(serializers.ModelSerializer):
         many=True
     )
     year = serializers.IntegerField(
-        validators=(year_validate,))
+        validators=(year_validate,)
+    )
 
     class Meta:
         model = Title
@@ -53,8 +54,10 @@ class TitleReadSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(read_only=True,
-                                          slug_field='username')
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
 
     class Meta:
         model = Comment
@@ -65,10 +68,18 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         read_only=True,
         slug_field='username',
-        default=serializers.CurrentUserDefault())
+        default=serializers.CurrentUserDefault()
+    )
     score = serializers.IntegerField(
-        validators=(MinValueValidator(MIN, 'Оценка не может быть менее 1'),
-                    MaxValueValidator(MAX, 'Оценка не божет быть более 10')))
+        validators=(
+            MinValueValidator(
+                MIN_SCORE, f'Оценка не может быть менее {MIN_SCORE}'
+            ),
+            MaxValueValidator(
+                MAX_SCORE, f'Оценка не божет быть более {MAX_SCORE}'
+            )
+        )
+    )
 
     class Meta:
         model = Review

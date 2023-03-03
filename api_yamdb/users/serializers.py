@@ -4,6 +4,7 @@ from users.models import User
 from api_yamdb.settings import LEN_EMAIL, LEN_USERNAME, USERNAME_PATTERN, SELF_USERNAME
 
 
+
 class TokenSerializer(serializers.Serializer):
     username = serializers.CharField()
     confirmation_code = serializers.CharField()
@@ -36,7 +37,8 @@ class SignUpSerializers(serializers.Serializer):
     def validate_email(self, value):
         if len(value) > LEN_EMAIL:
             raise serializers.ValidationError(
-                f'Количество символов поля email не должно превышать {LEN_EMAIL}')
+                'Количество символов поля email не должно превышать '
+                f'{LEN_EMAIL}')
         return value
 
     def validate_username(self, value):
@@ -48,7 +50,7 @@ class SignUpSerializers(serializers.Serializer):
                 f'Количество символов поля username не должно превышать {LEN_USERNAME}')
         if value == SELF_USERNAME:
             raise serializers.ValidationError(
-                'Значение поля username не может быть me')
+                f'Значение поля username не может быть {SELF_USERNAME}')
         return value
 
     class Meta:
