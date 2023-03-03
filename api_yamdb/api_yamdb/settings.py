@@ -124,9 +124,9 @@ CSV_DIR = BASE_DIR / 'static/data/'
 
 EMAIL_YAMDB = 'egor@yamdb.com'
 
-MIN = 1
+MIN_SCORE = 1
 
-MAX = 10
+MAX_SCORE = 10
 
 LEN_EMAIL = 254  # максимальная допустима длина email
 
