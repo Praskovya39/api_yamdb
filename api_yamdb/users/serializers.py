@@ -1,12 +1,7 @@
 import re
 from rest_framework import serializers
 from users.models import User
-from api_yamdb.settings import LEN_EMAIL, LEN_USERNAME, USERNAME_PATTERN
-
-
-LEN_EMAIL = 254  # максимальная допустима длина email
-LEN_USERNAME = 150  # максимальная допустима длина username
-USERNAME_PATTERN = r'^[\w.@+-]+\Z'  # паттерн поля username
+from api_yamdb.settings import LEN_EMAIL, LEN_USERNAME, USERNAME_PATTERN, SELF_USERNAME
 
 
 class TokenSerializer(serializers.Serializer):
@@ -51,7 +46,7 @@ class SignUpSerializers(serializers.Serializer):
         if len(value) > LEN_USERNAME:
             raise serializers.ValidationError(
                 f'Количество символов поля username не должно превышать {LEN_USERNAME}')
-        if value == 'me':
+        if value == SELF_USERNAME:
             raise serializers.ValidationError(
                 'Значение поля username не может быть me')
         return value

@@ -132,4 +132,6 @@ LEN_EMAIL = 254  # максимальная допустима длина email
 
 LEN_USERNAME = 150  # максимальная допустима длина username
 
-USERNAME_PATTERN = r'^[\w.@+-]+\Z'  # паттерн поля username
+USERNAME_PATTERN = r'^[\w.@+-]+\Z'  # проверяем поле usermane на соотвествие этому паттерну
+
+SELF_USERNAME = 'me'

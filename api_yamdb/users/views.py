@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework import viewsets, pagination, permissions, filters, status
 
-
+from api_yamdb.settings import SELF_USERNAME
 from users.models import User
 from users.serializers import (
     TokenSerializer, SignUpSerializers, UserSerializer, UserNotAdminSerializer)
@@ -16,7 +16,7 @@ from users.permissions import IsAdmin
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdmin, ]
+    permission_classes = (IsAdmin, )
     pagination_class = pagination.LimitOffsetPagination
     http_method_names = ('get', 'post', 'patch', 'delete')
     lookup_field = 'username'
@@ -26,8 +26,8 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(
         detail=False,
         methods=('GET', 'PATCH'),
-        url_path='me',
-        permission_classes=[permissions.IsAuthenticated]
+        url_path=SELF_USERNAME,
+        permission_classes=(permissions.IsAuthenticated,)
     )
     def get_self(self, request):
         instance = request.user
